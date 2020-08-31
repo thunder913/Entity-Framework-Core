@@ -135,14 +135,12 @@ namespace ProductShop
             Mapper.Initialize(cfg => cfg.AddProfile(new ProductShopProfile()));
 
             List<UserDTO> users = context.Users
-                .Where(x => x.ProductsSold.Any(y => y.Buyer != null))
-                .OrderByDescending(x => x.ProductsSold.Count())
+                .Where(x => x.ProductsSold.Any(y=>y.Buyer != null))
+                .OrderByDescending(x => x.ProductsSold.Count(y=>y.Buyer != null))
                 .ProjectTo<UserDTO>()
                 .ToList();
 
             var objectToSerialize = Mapper.Map<UserProductDTO>(users);
-
-          
 
             var json = JsonConvert.SerializeObject(objectToSerialize,
                 new JsonSerializerSettings()

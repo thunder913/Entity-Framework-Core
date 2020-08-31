@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration.Conventions;
+using Microsoft.SqlServer.Server;
 using ProductShop.Export;
 using ProductShop.Models;
 using System;
@@ -34,8 +35,7 @@ namespace ProductShop
 
             //Users and Products
 
-            this.CreateMap<Product, ProductDTO>()
-                .ForMember(x => x.Price, y => y.MapFrom(x => Decimal.Round(x.Price, 1)));
+            this.CreateMap<Product, ProductsDTO>();
 
             this.CreateMap<User, SoldProductsDTO>()
                 .ForMember(x => x.Products, y => y.MapFrom(x => x.ProductsSold.Where(z=>z.Buyer != null)));

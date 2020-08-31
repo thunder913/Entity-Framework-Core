@@ -19,6 +19,7 @@ namespace ProductShop.Export
 
     public class UserDTO 
     {
+        public UserDTO() { }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int? Age { get; set; }
