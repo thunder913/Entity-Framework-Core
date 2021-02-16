@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entity Relations v2", "Entity Relations v2\Entity Relations v2.csproj", "{A54F269A-BE95-4EAD-BAD1-46987F21D716}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A54F269A-BE95-4EAD-BAD1-46987F21D716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54F269A-BE95-4EAD-BAD1-46987F21D716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54F269A-BE95-4EAD-BAD1-46987F21D716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54F269A-BE95-4EAD-BAD1-46987F21D716}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {57560557-1E7E-43C9-8BF8-1375550621C2}
+	EndGlobalSection
+EndGlobal
