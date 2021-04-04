@@ -155,8 +155,9 @@ namespace ProductShop
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new ProductShopProfile()));
 
-            var users = context.Users
+            var users = context.Users  
                 .Where(u => u.ProductsSold.Count > 0)
+                .ToArray()
                 .ProjectTo<UserDTO>()
                 .ToList()
                 .OrderByDescending(u => u.SoldProducts.Count)

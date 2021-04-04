@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using ProductShop.Data;
@@ -98,6 +99,7 @@ namespace ProductShop
             var users =
                     context
                     .Users
+                    .ToList()
                     .Where(x => x.ProductsSold.Any(y => y.Buyer != null))
                     .OrderBy(x => x.LastName)
                     .ThenBy(x => x.FirstName)
@@ -151,17 +153,35 @@ namespace ProductShop
 
         public static string GetUsersWithProducts(ProductShopContext context)
         {
-            Mapper.Initialize(cfg => cfg.AddProfile(new ProductShopProfile()));
-
             var users = context.Users
+                .Include(x => x.ProductsSold)
+                .ToList()
                 .Where(x => x.ProductsSold.Any(y => y.Buyer != null))
-                .OrderByDescending(x => x.ProductsSold.Count(y=>y.Buyer!=null))
-                .ProjectTo<UserDto>()
+                .Select(x => new
+                {
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        Age = x.Age,
+                        SoldProducts = new
+                        {
+                            Count = x.ProductsSold.Where(y => y.Buyer != null).Count(),
+                            Products = x.ProductsSold.Where(y => y.Buyer != null).Select(y => new
+                            {
+                                Name = y.Name,
+                                Price = y.Price
+                            }).ToList(),
+                        },
+                })
+                .OrderByDescending(x => x.SoldProducts.Count)
                 .ToList();
 
-            var objectToSerialize = Mapper.Map<UserCountWithUsersDto>(users);
+            var toJson = new
+            {
+                UsersCount = users.Count(),
+                Users = users,
+            };
 
-            var jsonText = JsonConvert.SerializeObject(objectToSerialize, new JsonSerializerSettings()
+            var jsonText = JsonConvert.SerializeObject(toJson, new JsonSerializerSettings()
             {
                 ContractResolver = new DefaultContractResolver()
                 {

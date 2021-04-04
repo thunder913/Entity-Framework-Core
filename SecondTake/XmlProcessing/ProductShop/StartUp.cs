@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using ProductShop.Data;
 using ProductShop.Dtos.Export;
 using ProductShop.Models;
@@ -152,22 +153,36 @@ namespace ProductShop
 
         public static string GetUsersWithProducts(ProductShopContext context)
         {
-            Mapper.Initialize(cfg => cfg.AddProfile(new ProductShopProfile()));
-
-
             var users =
                 context
                 .Users
+                .Include(x => x.ProductsSold)
+                .ToList()
                 .Where(x => x.ProductsSold.Any(y => y.Buyer != null))
-                .ProjectTo<UserProductDto>()
-                .ToArray()
-                .OrderByDescending(x=>x.SoldProducts.Count)
+                .Select(x => new UserProductDto()
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Age = x.Age,
+                    SoldProducts = new SoldProducts()
+                    {
+                        Count = x.ProductsSold.Count(z => z.Buyer != null),
+                        Products = x.ProductsSold.Where(z => z.Buyer != null).Select(v => new ProductDto()
+                        {
+                            Name = v.Name,
+                            Price = v.Price
+                        })
+                        .OrderByDescending(b => b.Price)
+                        .ToArray()
+                    }
+                })
+                .OrderByDescending(x => x.SoldProducts.Count)
                 .Take(10)
                 .ToArray();
 
             var usersCount = new UserCountDto()
             {
-                Count = users.Sum(x=>x.SoldProducts.Count),
+                Count = context.Users.Count(x => x.ProductsSold.Any(y => y.Buyer != null)),
                 Users = users
             };
 
